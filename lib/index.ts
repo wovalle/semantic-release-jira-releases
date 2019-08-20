@@ -1,2 +1,2 @@
 export { verifyConditions } from './verifyConditions';
-export { success } from './success';
+export { publish } from './publish';

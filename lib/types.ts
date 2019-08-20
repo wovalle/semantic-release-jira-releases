@@ -62,3 +62,12 @@ export interface PluginConfig extends BaseConfig {
   releaseNameTemplate?: string;
   jiraHost: string;
 }
+
+export interface PublishReturn {
+  name: string;
+  url: string;
+  releaseId: string;
+  archived: boolean;
+  released: boolean;
+  projectId: number;
+}

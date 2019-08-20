@@ -2,7 +2,7 @@ import JiraClient, { Version } from 'jira-connector';
 import * as _ from 'lodash';
 
 import { makeClient } from './jira';
-import { GenerateNotesContext, PluginConfig } from './types';
+import { GenerateNotesContext, PluginConfig, PublishReturn } from './types';
 import { escapeRegExp } from './util';
 
 export function getTickets(config: PluginConfig, context: GenerateNotesContext): string[] {
@@ -31,7 +31,7 @@ export function getTickets(config: PluginConfig, context: GenerateNotesContext):
   return [...tickets];
 }
 
-async function findOrCreateVersion(config: PluginConfig, context: GenerateNotesContext, jira: JiraClient, projectIdOrKey: string, name: string): Promise<Version> {
+async function findOrCreateVersion(config: PluginConfig, context: GenerateNotesContext, jira: JiraClient, projectIdOrKey: string, name: string): Promise<any> {
   const remoteVersions = await jira.project.getVersions({ projectIdOrKey });
   context.logger.info(`Looking for version with name '${name}'`);
   const existing = _.find(remoteVersions, { name });
@@ -62,7 +62,7 @@ async function findOrCreateVersion(config: PluginConfig, context: GenerateNotesC
   return newVersion;
 }
 
-export async function success(config: PluginConfig, context: GenerateNotesContext): Promise<void> {
+export async function publish(config: PluginConfig, context: GenerateNotesContext): Promise<PublishReturn> {
   const tickets = getTickets(config, context);
 
   context.logger.info(`Found ticket ${tickets.join(', ')}`);
@@ -110,4 +110,12 @@ export async function success(config: PluginConfig, context: GenerateNotesContex
     }
   }
 
+  return {
+    url: releaseVersion.self,
+    name: releaseVersion.name,
+    releaseId: releaseVersion.id,
+    released: releaseVersion. released,
+    projectId: releaseVersion.projectId,
+    archived: releaseVersion.archived,
+  };
 }
