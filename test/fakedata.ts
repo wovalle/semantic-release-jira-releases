@@ -1,5 +1,4 @@
 import { BaseConfig, Person, Commit, PreviousRelease, UpcomingRelease, PluginConfig, PluginContext, GenerateNotesContext } from "../lib/types";
-
 export const baseConfig: BaseConfig = {
   $0: '',
   branch: 'test',
@@ -65,8 +64,8 @@ export const pluginContext: PluginContext = {
   env: {},
   logger: logger as any,
   options: baseConfig,
-  stderr: null,
-  stdout: null,
+  stderr: null as any,
+  stdout: null  as any,
 }
 export const context: GenerateNotesContext = {
   ...pluginContext,
