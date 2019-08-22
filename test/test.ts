@@ -1,4 +1,4 @@
-import { getTickets } from "../lib/success";
+import { getTickets } from "../lib/publish";
 import { pluginConfig, context } from "./fakedata";
 import { PluginConfig } from "../lib/types";
 
