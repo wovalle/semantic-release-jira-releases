@@ -62,3 +62,7 @@ interface Config {
   releaseNameTemplate?: string;
 }
 ```
+
+### Authentication
+Internally, this module uses [jira-connector with base64 authentication](https://github.com/floralvikings/jira-connector#basic-authentication-base64), so `JIRA_AUTH` environment variable should be a string with base64 encoding of 'username:password' (for legacy server version) or 'username:api_token' (jira cloud).
+
