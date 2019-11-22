@@ -1,6 +1,6 @@
 declare module '@semantic-release/error' {
-  class SemanticReleaseError {
-    private message: any;
+  class SemanticReleaseError extends Error {
+    public message: any;
     private code: any;
     private details: any;
 

@@ -1,4 +1,5 @@
 import SemanticReleaseError from '@semantic-release/error';
+import AggregateError from 'aggregate-error';
 
 import { makeClient } from './jira';
 import { PluginConfig, PluginContext } from './types';
@@ -7,6 +8,7 @@ export async function verifyConditions(config: PluginConfig, context: PluginCont
   if (typeof config.jiraHost !== 'string') {
     throw new SemanticReleaseError(`config.jiraHost must be a string`);
   }
+
   if (typeof config.projectId !== 'string') {
     throw new SemanticReleaseError(`config.projectId must be a string`);
   }
@@ -23,6 +25,7 @@ export async function verifyConditions(config: PluginConfig, context: PluginCont
     if (!Array.isArray(config.ticketPrefixes)) {
       throw new SemanticReleaseError(`config.ticketPrefixes must be an array of string`);
     }
+
     for (const prefix of config.ticketPrefixes) {
       if (typeof prefix !== 'string') {
         throw new SemanticReleaseError(`config.ticketPrefixes must be an array of string`);
@@ -43,6 +46,12 @@ export async function verifyConditions(config: PluginConfig, context: PluginCont
   if (!context.env.JIRA_AUTH) {
     throw new SemanticReleaseError(`JIRA_AUTH must be a string`);
   }
+  
   const jira = makeClient(config, context);
-  await jira.project.getProject({ projectIdOrKey: config.projectId });
+  const project = await jira.project.getProject({ projectIdOrKey: config.projectId });
+  
+  if(!project.id) {
+    context.logger.error(`${config.projectId} is not a valid JIRA project`)
+    throw new AggregateError([new SemanticReleaseError(`${config.projectId} is not a valid JIRA project`)]);
+  }
 }

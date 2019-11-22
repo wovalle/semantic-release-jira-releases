@@ -71,5 +71,6 @@ export const context: GenerateNotesContext = {
   ...pluginContext,
   commits,
   lastRelease: previousRelease,
-  nextRelease: upcomingRelease
+  nextRelease: upcomingRelease,
+  logger: { error: () => {}, info: () => {}  } as any,
 }

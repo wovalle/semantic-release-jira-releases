@@ -5,7 +5,7 @@ import { PluginConfig } from "../lib/types";
 jest.mock("../lib/jira", () => ({
   makeClient: () => ({
     project: {
-      getProject: () => {}
+      getProject: () => ({ id: 'test' })
     }
   })
 }));

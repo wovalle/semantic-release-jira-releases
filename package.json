@@ -1,6 +1,6 @@
 {
-  "name": "semantic-release-jira-releases",
-  "version": "1.0.0",
+  "name": "semantic-release-jira-releases-alt",
+  "version": "0.1.0",
   "main": "dist/lib/index.js",
   "repository": "https://github.com/UpHabit/semantic-release-jira-releases",
   "license": "MIT",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@semantic-release/error": "^2.2.0",
+    "aggregate-error": "^3.0.0",
     "jira-connector": "^2.16.0",
     "lodash": "^4.17.11",
     "tslib": "^1.9.2"

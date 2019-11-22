@@ -1,4 +1,5 @@
 import JiraClient, { Version } from 'jira-connector';
+import SemanticError from "@semantic-release/error";
 import * as _ from 'lodash';
 
 import { makeClient } from './jira';
@@ -63,6 +64,7 @@ async function findOrCreateVersion(config: PluginConfig, context: GenerateNotesC
 }
 
 export async function publish(config: PluginConfig, context: GenerateNotesContext): Promise<PublishReturn> {
+  let project, releaseVersion;
   const tickets = getTickets(config, context);
 
   context.logger.info(`Found ticket ${tickets.join(', ')}`);
@@ -70,12 +72,20 @@ export async function publish(config: PluginConfig, context: GenerateNotesContex
   const template = _.template(config.releaseNameTemplate || 'v${version}');
   const newVersionName = template({ version: context.nextRelease.version });
 
-  context.logger.info(`Using jira release '${newVersionName}'`);
+  context.logger.info(`Using jira release '${newVersionName} in project ${config.projectId}'`);
 
   const jira = makeClient(config, context);
 
-  const project = await jira.project.getProject({ projectIdOrKey: config.projectId });
-  const releaseVersion = await findOrCreateVersion(config, context, jira, project.id, newVersionName);
+  try{
+    project = await jira.project.getProject({ projectIdOrKey: config.projectId });
+  } catch {
+    throw new SemanticError(`Invalid projectId ${config.projectId}`)
+  }
+  try{
+    releaseVersion = await findOrCreateVersion(config, context, jira, project.id, newVersionName);
+  } catch(err) {
+    throw new SemanticError(`Could not create release projectId ${config.projectId}`)
+  }
 
   for (const issueKey of tickets) {
     try {
